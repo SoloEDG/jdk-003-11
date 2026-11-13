@@ -1,8 +1,24 @@
 <script setup lang="ts">
-import { battleState, currentIntent } from "../model/state";
+import { computed } from "vue";
+import {
+  battleState,
+  enemyIntents,
+  legalTargetId,
+} from "../model/state";
 import { cards } from "@/shared/cards";
+import { orderedEnemies } from "../lib/formation";
 import ActorCard from "./ActorCard.vue";
+
 defineEmits<{ play: [id: string]; end: []; settle: [] }>();
+
+const enemies = computed(() =>
+  battleState.formation ? orderedEnemies(battleState.formation) : [],
+);
+const intents = computed(() => enemyIntents());
+const targetId = computed(() => legalTargetId());
+const formationTitle = computed(() =>
+  enemies.value.map((e) => e.name).join("、") || "等待下一场遭遇",
+);
 </script>
 <template>
   <section class="panel battle-panel">
@@ -10,18 +26,24 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
       <span class="eyebrow">02 / THE ENCOUNTER</span
       ><span>回合 {{ battleState.turn }}</span>
     </div>
-    <h2>{{ battleState.enemy?.name ?? "等待下一场遭遇" }}</h2>
-    <div v-if="battleState.enemy" class="arena">
+    <h2>{{ formationTitle }}</h2>
+    <div v-if="enemies.length" class="arena arena-formation">
       <ActorCard :actor="battleState.hero" name="余烬旅人" />
       <div class="versus">
         VS<br /><small>{{ battleState.context?.region.toUpperCase() }}</small>
       </div>
-      <ActorCard
-        :actor="battleState.enemy"
-        :name="battleState.enemy.name"
-        enemy
-        :intent="currentIntent()"
-      />
+      <div class="enemy-line">
+        <ActorCard
+          v-for="e in enemies"
+          :key="e.id"
+          :actor="e"
+          :name="e.name"
+          enemy
+          :rank="e.rank"
+          :intent="intents[e.id]"
+          :legal-target="targetId === e.id"
+        />
+      </div>
     </div>
     <div v-else class="empty-art">
       ✧
@@ -38,6 +60,9 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
           结束回合 →
         </button>
       </div>
+      <p v-if="targetId" class="target-rule">
+        攻击牌将优先锁定标注“合法目标”的前排敌人；群攻作用于所有存活敌人。
+      </p>
       <div class="hand">
         <button
           v-for="c in battleState.piles.hand"
@@ -72,6 +97,9 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
             : "旅途结束 · 余烬熄灭"
         }}
       </h3>
+      <p v-if="battleState.phase === 'won'" class="muted">
+        阵形击破，已计入掉落 {{ battleState.collectedGold }} 金币。
+      </p>
       <button data-action="settle" @click="$emit('settle')">
         {{ battleState.phase === "won" ? "收取战利品 →" : "查看旅程结果" }}
       </button>

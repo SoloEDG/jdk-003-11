@@ -387,6 +387,54 @@ h2 {
   align-items: center;
   padding: 24px 0;
 }
+.arena-formation {
+  align-items: flex-start;
+  gap: 12px;
+}
+.enemy-line {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.enemy-line .actor {
+  width: 30%;
+  min-width: 120px;
+  padding: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.actor.target {
+  border-color: #d4c06a;
+  box-shadow: 0 0 18px rgba(212, 192, 106, 0.35);
+}
+.actor.summon {
+  opacity: 0.82;
+}
+.rank-tag {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 9px;
+  color: #8c9d78;
+  border: 1px solid #4a5a3c;
+  border-radius: 3px;
+  padding: 1px 4px;
+  vertical-align: middle;
+}
+.target-hint {
+  display: block;
+  font-style: normal;
+  font-size: 10px;
+  color: #d4c06a;
+  margin-top: 4px;
+}
+.target-rule {
+  font-size: 10px;
+  color: #8c9d78;
+  margin: 0 0 10px;
+}
 .actor {
   text-align: center;
   width: 38%;

@@ -7,7 +7,7 @@ export const cards: Record<string, CardSpec> = {
     kind: "attack",
     text: "造成 7 伤害。力量加成。",
     rarity: "common",
-    effects: [{ type: "damage", amount: 7, target: "enemy" }],
+    effects: [{ type: "damage", amount: 7, target: "enemy", scope: "single" }],
   },
   guard: {
     key: "guard",
@@ -26,8 +26,8 @@ export const cards: Record<string, CardSpec> = {
     text: "造成 4 伤害，施加 4 中毒。",
     rarity: "common",
     effects: [
-      { type: "damage", amount: 4, target: "enemy" },
-      { type: "poison", amount: 4, target: "enemy" },
+      { type: "damage", amount: 4, target: "enemy", scope: "single" },
+      { type: "poison", amount: 4, target: "enemy", scope: "single" },
     ],
   },
   focus: {
@@ -61,7 +61,7 @@ export const cards: Record<string, CardSpec> = {
     kind: "attack",
     text: "造成 17 伤害。",
     rarity: "rare",
-    effects: [{ type: "damage", amount: 17, target: "enemy" }],
+    effects: [{ type: "damage", amount: 17, target: "enemy", scope: "single" }],
   },
   shelter: {
     key: "shelter",
@@ -74,6 +74,35 @@ export const cards: Record<string, CardSpec> = {
       { type: "block", amount: 5, target: "hero" },
       { type: "heal", amount: 3, target: "hero" },
     ],
+  },
+  pierce: {
+    key: "pierce",
+    name: "裂甲贯刺",
+    cost: 1,
+    kind: "attack",
+    text: "穿透：造成 8 伤害，无视目标格挡。",
+    rarity: "common",
+    effects: [
+      { type: "damage", amount: 8, target: "enemy", scope: "pierce" },
+    ],
+  },
+  sweep: {
+    key: "sweep",
+    name: "焚风横扫",
+    cost: 2,
+    kind: "attack",
+    text: "群攻：对所有存活敌人各造成 6 伤害。",
+    rarity: "rare",
+    effects: [{ type: "damage", amount: 6, target: "enemy", scope: "aoe" }],
+  },
+  miasma: {
+    key: "miasma",
+    name: "腐瘴云环",
+    cost: 1,
+    kind: "skill",
+    text: "群攻：对所有存活敌人各施加 3 中毒。",
+    rarity: "rare",
+    effects: [{ type: "poison", amount: 3, target: "enemy", scope: "aoe" }],
   },
 };
 export function cardLabel(key: string) {
